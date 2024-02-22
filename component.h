@@ -1,14 +1,25 @@
+#pragma once
 #include<vector>
 #include<set>
+#include<string>
+
+class Card {
+public:
+	int number;
+	int color;
+	Card(int n, int d);
+	std::string card_info();
+	bool operator< (const Card& other) const;
+};
 
 class Poker {
 private:
-	std::vector<std::pair<int, int>> cards;
+	std::vector<Card> cards;
 	int top_card_ind;
 public:
 	Poker(); // initialize
 	void shuffle();
-	std::pair<int, int> deal();
+	Card deal();
 };
 
 class Dealer {
@@ -17,7 +28,7 @@ private:
 	int player_num;
 public:
 	Dealer(int ply_num);
-	std::pair<int,int> judge_type(std::vector<std::pair<int,int>> cards);
+	std::pair<int,int> judge_type(std::vector<Card> cards);
 	std::pair<int,int> compare(std::set<std::pair<int,int>> types);
 	int cur_order();
 	void next_order();
