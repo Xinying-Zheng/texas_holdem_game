@@ -1,46 +1,60 @@
 #include<vector>
-using namespace std;
+#include<set>
 
 class Poker {
-public:
-	vector<pair<int, int>> cards;
+private:
+	std::vector<std::pair<int, int>> cards;
 	int top_card_ind;
+public:
 	Poker(); // initialize
 	void shuffle();
-	pair<int, int> deal();
+	std::pair<int, int> deal();
 };
 
 class Dealer {
-public:
+private:
 	int speak_order;
-	int judge();
+	int player_num;
+public:
+	Dealer(int ply_num);
+	std::pair<int,int> judge_type(std::vector<std::pair<int,int>> cards);
+	std::pair<int,int> compare(std::set<std::pair<int,int>> types);
+	int cur_order();
 	void next_order();
 };
 
-class Player {
-public:
+class Chip {
+private:
 	int chip_num;
-	vector<pair<int,int>> cards;
-	void fall();
+public:
+	int get_chip_num();
+};
+
+class Player {
+private:
+	Chip chip;
+	std::vector<std::pair<int,int>> cards;
+public:
+	void fold();
 	void check();
 	void raise();
 };
 
 class Table {
-public:
-	vector<pair<int,int>> cards;
-	int cur_chip;
-	int cur_chip_sum;
-};
-
-class Chip {
+private:
+	std::vector<std::pair<int,int>> cards;
+	Chip cur_chip;
+	Chip cur_chip_sum;
 };
 
 class Game {
+private:
 	int player_num;
-	int chip_num;
-	vector<Player> players;
+	Chip chip_per_people;
+	std::vector<Player> players;
 	Poker poker;
 	Dealer dealer;
 	Table table;
+public:
+	Game(int ply_num, int chip_num);
 };
