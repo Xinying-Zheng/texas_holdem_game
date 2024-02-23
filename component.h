@@ -20,6 +20,7 @@ public:
 	Poker(); // initialize
 	void shuffle();
 	Card deal();
+	std::vector<Card> get_cards();
 };
 
 class Dealer {
@@ -38,34 +39,59 @@ class Chip {
 private:
 	int chip_num;
 public:
+	Chip (int num);
 	int get_chip_num();
+	void increase(int amount);
+	void decrease(int amount);
 };
 
 class Player {
 private:
 	Chip chip;
-	std::vector<std::pair<int,int>> cards;
+	std::vector<Card> hold;
+	bool alive;
 public:
+	Player(int chip_num);
+	bool is_alive();
+	void set_hold(Card card);
+	std::vector<Card> get_hold();
+	int get_chip_num();	
+	void bet(int amount);
+	void call(int amount);
 	void fold();
 	void check();
-	void raise();
+	void raise(int amount);
+	void all_in();
+	void win(int amount);
 };
 
 class Table {
 private:
-	std::vector<std::pair<int,int>> cards;
+	std::vector<Card> community_cards;
 	Chip cur_chip;
 	Chip cur_chip_sum;
+	int game_phase;
+public:
+	Table();
+	void set_community_cards(Card card);
+	std::string flop();
+	std::string trun();
+	std::string river();
+	int get_cur_chip();
+	int get_cur_chip_sum();
+	void raise_cur_chip(int amount);
+	void raise_cur_chip_sum(int amount);
+	std::vector<Card> get_community_cards();
+	std::string get_table_info();
+	void reset_table();
 };
 
 class Game {
-private:
+public:
 	int player_num;
-	Chip chip_per_people;
 	std::vector<Player> players;
 	Poker poker;
 	Dealer dealer;
 	Table table;
-public:
 	Game(int ply_num, int chip_num);
 };

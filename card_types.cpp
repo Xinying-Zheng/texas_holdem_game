@@ -50,9 +50,9 @@ bool is_straight_flush(std::vector<std::set<int>> color_cnt) {
 	return false;
 }
 
-bool is_four_of_a_kind(std::vector<std::set<int>> color_cnt) {
-	for (auto c : color_cnt) {
-		if (c.size() > 3) return true;
+bool is_four_of_a_kind(std::map<int,int> num_cnt) {
+	for (auto [n, cnt] : num_cnt) {
+		if (cnt > 3) return true;
 	}
 	return false;
 }
@@ -111,7 +111,7 @@ bool is_two_pairs(std::map<int,int> num_cnt) {
 bool is_one_pair(std::map<int,int> num_cnt) {
 	int pair = 0;
 	for (auto [n, cnt] : num_cnt) {
-		if (cnt > 0) pair++;
+		if (cnt > 1) pair++; 
 	}
 	if (pair > 0) return true;
 	return false;

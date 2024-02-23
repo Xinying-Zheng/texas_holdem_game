@@ -13,10 +13,14 @@ Poker::Poker() {
 
 void Poker::shuffle() {
 	std::default_random_engine e(time(0));
-	std::shuffle(cards.begin(), cards.end(), e);     
+	std::shuffle(cards.begin(), cards.end(), e); 
+	top_card_ind = 0;	
 }
 
 Card Poker::deal() {
 	return cards[top_card_ind++];
 }
 
+std::vector<Card> Poker::get_cards() {
+	return cards;
+}
