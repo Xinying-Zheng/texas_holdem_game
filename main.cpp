@@ -1,7 +1,8 @@
 #include "component.h"
 
 int round_process(Game &game);
-
+void action_process(int speak_order, std::set<int>& noalive, int ply_num, Table& table, std::vector<Player>& players, std::vector<int>& round_bet, int pre_raise);
+	
 int main() {
 	std::cout << "Please key [player number] [chip amount per player] and [blind bet number]" << std::endl;
 	int ply_num, chip_num, blind_bet;
@@ -55,26 +56,50 @@ int round_process(Game &game) {
 	game.table.raise_cur_chip_sum(game.blind_bet_num * 3);
 	
 	// before flop action
-	int speak_order = small_blind;
-	std::set<int> noalive, raise;
-	int pre_raise = big_blind;
-	for (int p = (big_blind + 1) % ply_num; p != pre_raise && noalive.size() != ply_num - 1; p = (p+1)%ply_num) {
+	std::set<int> noalive;
+	action_process(big_blind + 1, noalive, ply_num, game.table, game.players, round_bet, big_blind);
+	if (noalive.size() == ply_num - 1) return *noalive.begin();		
+	std::cout << game.table.flop() << std::endl;
+
+	// before turn action
+	action_process(small_blind, noalive, ply_num, game.table, game.players, round_bet, -1);
+	if (noalive.size() == ply_num - 1) return *noalive.begin();		
+	std::cout << game.table.turn() << std::endl;
+	
+	// before river action
+	action_process(small_blind, noalive, ply_num, game.table, game.players, round_bet, -1);
+	if (noalive.size() == ply_num - 1) return *noalive.begin();		
+	std::cout << game.table.river() << std::endl;
+	 
+	// after river action
+	action_process(small_blind, noalive, ply_num, game.table, game.players, round_bet, -1);
+	
+	// judge 
+	
+	
+	
+	return -1;	
+}
+
+void action_process(int speak_order, std::set<int>& noalive, int ply_num, Table& table, std::vector<Player>& players, std::vector<int>& round_bet, int pre_raise) {
+	std::set<int> raise;
+	for (int p = (speak_order) % ply_num; p != pre_raise && noalive.size() != ply_num - 1; p = (p+1)%ply_num) {
 		if (noalive.count(p)) continue;
 		std::cout << "player " + std::to_string(p) + " action" << std::endl;
 		std::cout << "Please choose: fold(f), call(c)";
 	   	if (!raise.count(p)) {
 			std::cout << " raise(r), all in(a)";
-		} if (round_bet[p] >= game.table.get_cur_chip()) {
+		} if (round_bet[p] >= table.get_cur_chip()) {
 			std::cout << " check in(k)" << std::endl;
 		}
 		char act;
-		int diff = game.table.get_cur_chip() - round_bet[p];
+		int diff = table.get_cur_chip() - round_bet[p];
 		std::cin >> act;
 		if (act == 'f') {
 			noalive.insert(p);
 		} else if (act == 'c') {
-			game.table.raise_cur_chip_sum(diff);
-			game.players[p].call(diff);
+			table.raise_cur_chip_sum(diff);
+			players[p].call(diff);
 			round_bet[p] += diff;
 		} else if (act == 'r' || 'a') {
 			int amt;
@@ -82,23 +107,17 @@ int round_process(Game &game) {
 				std::cout << "How much chip do you want to raise?" << std::endl;
 				std::cin >> amt;
 			} else {
-				amt = game.players[p].get_chip_num();
+				amt = players[p].get_chip_num();
 			}
-			game.players[p].raise(amt);
+			players[p].raise(amt);
 			round_bet[p] += amt;
-			game.table.raise_cur_chip_sum(amt);
-			game.table.raise_cur_chip_to(round_bet[p]);
+			table.raise_cur_chip_sum(amt);
+			table.raise_cur_chip_to(round_bet[p]);
 			raise.insert(p);
-		} 
+		}
+		if (pre_raise == -1) pre_raise = speak_order;
 	}
-// if nobody raise, big blind win, and if has someone raise pre_raise != big_blind, big_blind can raise one time.
-	if (noalive.size() == ply_num - 1) return *noalive.begin();		
-	
-	return -1;	
 }
-
-void action_process();
-
 int Test() {
 	std::cout << "Please key [player number] and [chip amount per player]" << std::endl;
 	int ply_num, chip_num;

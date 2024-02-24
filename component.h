@@ -77,7 +77,7 @@ public:
 	Table();
 	void set_community_cards(Card card);
 	std::string flop();
-	std::string trun();
+	std::string turn();
 	std::string river();
 	int get_cur_chip();
 	int get_cur_chip_sum();
@@ -99,3 +99,12 @@ public:
 	Table table;
 	Game(int ply_num, int chip_num, int blind_bet);
 };
+
+class Result {
+public:
+	int type;
+	int four_num;
+	int three_num;
+	int pair_num;
+	int high_card;
+};	

@@ -11,7 +11,7 @@ std::string Table::flop() {
 	return community_cards[0].card_info() + " " + community_cards[1].card_info() + " " + community_cards[2].card_info();
 }
 	
-std::string Table::trun() {
+std::string Table::turn() {
 	game_phase = 2;
 	return community_cards[3].card_info();
 }
