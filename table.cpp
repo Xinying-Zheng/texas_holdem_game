@@ -29,8 +29,9 @@ int Table::get_cur_chip_sum() {
 	return cur_chip_sum.get_chip_num();
 }
 
-void Table::raise_cur_chip(int amount) {
-	cur_chip.increase(amount);
+void Table::raise_cur_chip_to(int amount) {
+	cur_chip.set(amount);
+	std::cout << "Current chip is " + std::to_string(cur_chip.get_chip_num()) << std::endl;
 }
 
 void Table::raise_cur_chip_sum(int amount) {

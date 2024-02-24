@@ -2,6 +2,7 @@
 #include<vector>
 #include<set>
 #include<string>
+#include<iostream>
 
 class Card {
 public:
@@ -25,14 +26,14 @@ public:
 
 class Dealer {
 private:
-	int speak_order;
 	int player_num;
+	int button;
 public:
 	Dealer(int ply_num);
 	std::pair<int,int> judge_type(std::vector<Card> cards);
 	std::pair<int,int> compare(std::set<std::pair<int,int>> types);
-	int cur_order();
-	void next_order();
+	int get_button();
+	void move_button();
 };
 
 class Chip {
@@ -43,6 +44,7 @@ public:
 	int get_chip_num();
 	void increase(int amount);
 	void decrease(int amount);
+	void set(int amount);
 };
 
 class Player {
@@ -79,7 +81,7 @@ public:
 	std::string river();
 	int get_cur_chip();
 	int get_cur_chip_sum();
-	void raise_cur_chip(int amount);
+	void raise_cur_chip_to(int amount);
 	void raise_cur_chip_sum(int amount);
 	std::vector<Card> get_community_cards();
 	std::string get_table_info();
@@ -89,9 +91,11 @@ public:
 class Game {
 public:
 	int player_num;
+	int round;
+	int blind_bet_num;
 	std::vector<Player> players;
 	Poker poker;
 	Dealer dealer;
 	Table table;
-	Game(int ply_num, int chip_num);
+	Game(int ply_num, int chip_num, int blind_bet);
 };

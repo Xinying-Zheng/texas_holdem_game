@@ -13,3 +13,7 @@ void Chip::increase(int amount) {
 void Chip::decrease(int amount) {
 	chip_num -= amount;
 }
+
+void Chip::set(int amount) {
+	chip_num = amount;
+}

@@ -1,5 +1,6 @@
 #include "card_types.h"
 #include "component.h"
+#include <iostream>
 
 const std::vector<std::string> COLOR_NAMES = {"Spade", "Heart", "Diamond", "Club"};
 
@@ -45,6 +46,7 @@ bool is_straight_flush(std::vector<std::set<int>> color_cnt) {
 			}
 			pre = cd;
 		}
+		max_len = std::max(len, max_len);
 		if(max_len >= 5) return true;
 	}
 	return false;

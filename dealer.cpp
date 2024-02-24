@@ -1,7 +1,11 @@
 #include "component.h"
 #include "card_types.h"
+#include <cstdlib>
 
-Dealer::Dealer(int ply_num) : player_num(ply_num), speak_order(0) {}
+Dealer::Dealer(int ply_num) : player_num(ply_num) {
+	std::srand(time(NULL));	
+	button = std::rand() % ply_num;	
+}
 
 std::pair<int,int> Dealer::judge_type(std::vector<Card> cards) {
 	int hc = high_card(cards);
@@ -24,11 +28,11 @@ std::pair<int,int> Dealer::compare(std::set<std::pair<int,int>> types) {
 	return *types.rbegin();
 }
 
-int Dealer::cur_order() {
-	return speak_order;
+void Dealer::move_button() {
+	button = (button + 1) % player_num;
 }
 
-void Dealer::next_order() {
-	speak_order = (speak_order + 1) % player_num;
+int Dealer::get_button() {
+	return button;
 }
 
