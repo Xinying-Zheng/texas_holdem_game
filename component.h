@@ -24,14 +24,31 @@ public:
 	std::vector<Card> get_cards();
 };
 
+class Result {
+public:
+	int player_id;
+	int type;
+	int four_num;
+	int three_num;
+	std::vector<int> pair_num;
+	int high_card;
+	int straight_tail; // we can proof there cam only be one tail
+	int straight_len;
+	std::set<int> same_color;
+	int score;
+	Result();
+	Result(int ply_id);
+	bool operator< (const Result& other) const;
+};
+
 class Dealer {
 private:
 	int player_num;
 	int button;
 public:
 	Dealer(int ply_num);
-	std::pair<int,int> judge_type(std::vector<Card> cards);
-	std::pair<int,int> compare(std::set<std::pair<int,int>> types);
+	void judge_type(Result& res, std::vector<Card> cards);
+	std::set<int> compare(std::vector<Result> res);
 	int get_button();
 	void move_button();
 };
@@ -100,11 +117,4 @@ public:
 	Game(int ply_num, int chip_num, int blind_bet);
 };
 
-class Result {
-public:
-	int type;
-	int four_num;
-	int three_num;
-	int pair_num;
-	int high_card;
-};	
+

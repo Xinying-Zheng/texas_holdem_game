@@ -1,5 +1,5 @@
 TARGET = texas_holdem_game
-OBJ = main.o game.o poker.o card_types.o chip.o dealer.o player.o table.o card.o
+OBJ = main.o game.o poker.o card_types.o chip.o dealer.o player.o table.o card.o result.o
 
 $(TARGET): $(OBJ)
 	g++ -std=c++17 $(OBJ) -o $(TARGET) 
@@ -30,3 +30,6 @@ table.o : table.cpp component.h
 
 card.o : card.cpp component.h card_types.h
 	g++ -c -std=c++17 card.cpp
+
+result.o : result.cpp component.h
+	g++ -c -std=c++17 result.cpp

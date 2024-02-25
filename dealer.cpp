@@ -7,25 +7,28 @@ Dealer::Dealer(int ply_num) : player_num(ply_num) {
 	button = std::rand() % ply_num;	
 }
 
-std::pair<int,int> Dealer::judge_type(std::vector<Card> cards) {
-	int hc = high_card(cards);
-	std::vector<std::set<int>> color_cnt = color_counter(cards);
-	std::map<int,int> num_cnt = number_counter(cards);
-	if (is_royal_flush(color_cnt)) return {9, hc};
-	else if (is_straight_flush(color_cnt)) return {8, hc};
-	else if (is_four_of_a_kind(num_cnt)) return {7, hc};
-	else if (is_full_house(num_cnt)) return {6, hc};
-	else if (is_flush(color_cnt)) return {5, hc};
-	else if (is_straight(num_cnt)) return {4, hc};
-	else if (is_three_of_a_kind(num_cnt)) return {3, hc};
-	else if (is_two_pairs(num_cnt)) return {2, hc};
-	else if (is_one_pair(num_cnt)) return {1, hc};
-	else return {0, hc};	
+void Dealer::judge_type(Result& res, std::vector<Card> cards) {
+	card_counter(cards, res);
+	if (is_royal_flush(res)) return;
+	else if (is_straight_flush(res)) return;
+	else if (is_four_of_a_kind(res)) return;
+	else if (is_full_house(res)) return;
+	else if (is_flush(res)) return;
+	else if (is_straight(res)) return;
+	else if (is_three_of_a_kind(res)) return;
+	else if (is_two_pairs(res)) return;
+	else if (is_one_pair(res)) return;
+	else return;	
 }
 
 // return the greatest card type
-std::pair<int,int> Dealer::compare(std::set<std::pair<int,int>> types) {
-	return *types.rbegin();
+std::set<int> Dealer::compare(std::vector<Result> res) {
+	sort(res.begin(), res.end());
+	std::set<int> win;
+	for (auto r : res) {
+		if (r.type == res[0].type && r.score == res[0].score) win.insert(r.player_id);
+	}
+	return win;
 }
 
 void Dealer::move_button() {

@@ -152,8 +152,8 @@ int Test() {
 	for (auto p : game.players) {
 		auto tmp = game.table.get_community_cards(); 
 		for(auto c : p.get_hold()) tmp.push_back(c);
-		auto type = game.dealer.judge_type(tmp);
-		std::cout << type.first << ' ' << type.second << std::endl;
+//		auto type = game.dealer.judge_type(tmp);
+//		std::cout << type.first << ' ' << type.second << std::endl;
 	}
 
 return 0;
