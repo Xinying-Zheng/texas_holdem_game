@@ -43,3 +43,7 @@ void Player::all_in() {
 void Player::win(int amount) {
 	chip.increase(amount);
 }
+
+void Player::clean_hold() {
+	hold.clear();
+}

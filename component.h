@@ -82,6 +82,7 @@ public:
 	void raise(int amount);
 	void all_in();
 	void win(int amount);
+	void clean_hold();
 };
 
 class Table {
@@ -116,5 +117,4 @@ public:
 	Table table;
 	Game(int ply_num, int chip_num, int blind_bet);
 };
-
 
