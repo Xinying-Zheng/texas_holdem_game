@@ -2,6 +2,8 @@
 #include "card_types.h"
 #include <cstdlib>
 
+Dealer::Dealer() {}
+
 Dealer::Dealer(int ply_num) : player_num(ply_num) {
 	std::srand(time(NULL));	
 	button = std::rand() % ply_num;	
@@ -19,7 +21,7 @@ void Dealer::judge_type(Result& res, std::vector<Card> cards) {
 	else if (is_two_pairs(res)) return;
 	else if (is_one_pair(res)) return;
 	else res.score = res.high_card;	
-}
+	}
 
 // return the greatest card type
 std::set<int> Dealer::compare(std::vector<Result> res) {

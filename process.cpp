@@ -1,5 +1,6 @@
 #include "component.h"
 #include "process.h"
+#include "bot.h"
 
 int round_process(Game &game) {
 	// Shuffle
@@ -28,7 +29,10 @@ int round_process(Game &game) {
 	game.poker.deal(); // drop
 	std::cout << "Deal river card..." << std::endl;
 	game.table.set_community_cards(game.poker.deal());
-	
+	std::cout << "Your hold cards are:";
+	for (auto c : game.players[0].get_hold()) std::cout << " " + c.card_info();
+	std::cout << std::endl;	
+
 	// Blind bet
 	int small_blind = (button + 1) % ply_num;
 	int big_blind = (small_blind + 1) % ply_num;	
@@ -92,13 +96,17 @@ int action_process(int speak_order, std::set<int>& noalive, int ply_num, Table& 
 	for (int p = (speak_order) % ply_num; p != pre_raise && noalive.size() != ply_num - 1; p = (p+1)%ply_num) {
 		if (noalive.count(p)) continue;
 		std::cout << "player " + std::to_string(p) + " action" << std::endl;
-		std::cout << "Please choose: fold(f), call(c)";
-	   	if (!raise.count(p)) {
-			std::cout << " raise(r), all in(a)";
-		} if (round_bet[p] >= table.get_cur_chip()) {
-			std::cout << " check in(k)" << std::endl;
-		}
 		char act;
+		if (p != 0) {
+			act = robot_action(table, players[p]);
+		} else {
+			std::cout << "Please choose: fold(f), call(c)";
+			if (!raise.count(p)) {
+				std::cout << " raise(r), all in(a)";
+			} if (round_bet[p] >= table.get_cur_chip()) {
+				std::cout << " check in(k)" << std::endl;
+			}
+		}
 		int diff = table.get_cur_chip() - round_bet[p];
 		std::cin >> act;
 		if (act == 'f') {
@@ -110,8 +118,12 @@ int action_process(int speak_order, std::set<int>& noalive, int ply_num, Table& 
 		} else if (act == 'r' || 'a') {
 			int amt;
 			if (act == 'r') {
-				std::cout << "How much chip do you want to raise?" << std::endl;
-				std::cin >> amt;
+				if (p == 0) {
+					std::cout << "How much chip do you want to raise?" << std::endl;
+					std::cin >> amt;
+				} else {
+					amt = table.get_cur_chip();
+				}
 			} else {
 				amt = players[p].get_chip_num();
 			}

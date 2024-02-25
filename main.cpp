@@ -10,6 +10,7 @@ int main(int argc, char** argv) {
 	std::cout << "Please key [player number] [chip amount per player] and [blind bet number]" << std::endl;
 	int ply_num, chip_num, blind_bet;
 	std::cin >> ply_num >> chip_num >> blind_bet;
+	std::cout << "Game start, you are Player 0" << std::endl;
 	Game game(ply_num, chip_num, blind_bet);
 	game.poker.shuffle();
 	round_process(game);

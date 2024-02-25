@@ -1,6 +1,6 @@
 #include "component.h"
 
-Player::Player(int chip_num) : chip(Chip(chip_num)), alive(true) {};
+Player::Player(int chip_num) : chip(Chip(chip_num)), alive(true), hold_level(0) {};
 
 bool Player::is_alive() {
 	return alive;
@@ -47,3 +47,14 @@ void Player::win(int amount) {
 void Player::clean_hold() {
 	hold.clear();
 }
+
+int Player::get_hold_level() {
+	return hold_level;
+}
+
+void Player::set_hold_level(int l) {
+	hold_level = l;
+}
+
+
+	

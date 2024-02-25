@@ -29,6 +29,10 @@ int Table::get_cur_chip_sum() {
 	return cur_chip_sum.get_chip_num();
 }
 
+int Table::get_game_phase() const {
+	return game_phase;
+}
+
 void Table::raise_cur_chip_to(int amount) {
 	cur_chip.set(amount);
 	std::cout << "Current chip is " + std::to_string(cur_chip.get_chip_num()) << std::endl;
@@ -38,7 +42,7 @@ void Table::raise_cur_chip_sum(int amount) {
 	cur_chip_sum.increase(amount);
 }
 
-std::vector<Card> Table::get_community_cards() {
+std::vector<Card> Table::get_community_cards() const{
 	return community_cards;
 }
 

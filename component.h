@@ -46,6 +46,7 @@ private:
 	int player_num;
 	int button;
 public:
+	Dealer();
 	Dealer(int ply_num);
 	void judge_type(Result& res, std::vector<Card> cards);
 	std::set<int> compare(std::vector<Result> res);
@@ -69,6 +70,7 @@ private:
 	Chip chip;
 	std::vector<Card> hold;
 	bool alive;
+	int hold_level; // 1~6
 public:
 	Player(int chip_num);
 	bool is_alive();
@@ -83,6 +85,8 @@ public:
 	void all_in();
 	void win(int amount);
 	void clean_hold();
+	int get_hold_level();
+	void set_hold_level(int l);
 };
 
 class Table {
@@ -99,9 +103,10 @@ public:
 	std::string river();
 	int get_cur_chip();
 	int get_cur_chip_sum();
+	int get_game_phase() const;
 	void raise_cur_chip_to(int amount);
 	void raise_cur_chip_sum(int amount);
-	std::vector<Card> get_community_cards();
+	std::vector<Card> get_community_cards() const;
 	std::string get_table_info();
 	void reset_table();
 };
