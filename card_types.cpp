@@ -18,6 +18,8 @@ void card_counter(const std::vector<Card>& cards, Result& res) {
 				if (res.three_num != 0) res.pair_num.push_back(res.three_num);
 				res.three_num = num;
 			}
+		} else if (cnt == 2) {
+			res.pair_num.push_back(num);
 		}
 	}
 	res.high_card = high_card(cards);
@@ -90,7 +92,7 @@ bool is_four_of_a_kind(Result& res) {
 bool is_full_house(Result& res) {
 	if (res.three_num != 0 && res.pair_num.size() != 0) {
 		res.type = 6;
-		res.score = (res.four_num == 1 ? 14 : res.three_num) * 100 + *(res.pair_num.rbegin());
+		res.score = (res.three_num == 1 ? 14 : res.three_num) * 100 + *(res.pair_num.rbegin());
 		return true;
 	}
 	return false;

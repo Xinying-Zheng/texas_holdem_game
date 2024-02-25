@@ -6,7 +6,7 @@ Result::Result(int ply_id): player_id(ply_id), type(0), four_num(0), three_num(0
 
 bool Result::operator< (const Result& other) const {
 	if (type < other.type) return true;
-	if (score < other.score) return true;
+	if (type == other.type && score < other.score) return true;
 	return false;
 }
 

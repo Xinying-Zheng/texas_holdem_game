@@ -18,12 +18,12 @@ void Dealer::judge_type(Result& res, std::vector<Card> cards) {
 	else if (is_three_of_a_kind(res)) return;
 	else if (is_two_pairs(res)) return;
 	else if (is_one_pair(res)) return;
-	else return;	
+	else res.score = res.high_card;	
 }
 
 // return the greatest card type
 std::set<int> Dealer::compare(std::vector<Result> res) {
-	sort(res.begin(), res.end());
+	sort(res.rbegin(), res.rend());
 	std::set<int> win;
 	for (auto r : res) {
 		if (r.type == res[0].type && r.score == res[0].score) win.insert(r.player_id);

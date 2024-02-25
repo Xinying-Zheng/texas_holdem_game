@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv) {
 	if (argc > 1) {
-		if (std::string(argv[1]) == "test") Test();
+		if (std::string(argv[1]) == "test") test();
 		return 0;
 	}
 	std::cout << "Please key [player number] [chip amount per player] and [blind bet number]" << std::endl;

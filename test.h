@@ -1,3 +1,5 @@
 #pragma once
 
-void Test();
+void test();
+
+void test_judge_and_compare();
