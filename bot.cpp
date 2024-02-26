@@ -2,13 +2,14 @@
 #include "bot.h"
 
 char robot_action(const Table& table, Player& player) {
+	std::cout << "robot action" << std::endl;
 	int phase = table.get_game_phase();
 	Dealer d;
 	if (phase == 0) {
 		int level = robot_judge_hold_level(player);
 		player.set_hold_level(level);
-		if (level > 4) return 'f';
-		else if (level > 2) return 'c';
+		if (level > 5) return 'f';
+		else if (level > 3) return 'c';
 		else return 'r';
 	} else if (phase == 1) {
 		std::vector<Card> hold = player.get_hold();

@@ -29,7 +29,7 @@ int round_process(Game &game) {
 	game.poker.deal(); // drop
 	std::cout << "Deal river card..." << std::endl;
 	game.table.set_community_cards(game.poker.deal());
-	std::cout << "Your hold cards are:";
+	std::cout << "#Your hold cards are:";
 	for (auto c : game.players[0].get_hold()) std::cout << " " + c.card_info();
 	std::cout << std::endl;	
 
@@ -49,31 +49,48 @@ int round_process(Game &game) {
 	std::set<int> noalive;
 	int all_in_flag = 0;
 	all_in_flag = action_process(big_blind + 1, noalive, ply_num, game.table, game.players, round_bet, big_blind);
-	if (all_in_flag) goto Final;
+	if (all_in_flag < 0) goto Final;
+	else if (all_in_flag == game.player_num + 1) goto Judge;
 	if (noalive.size() == ply_num - 1) return *noalive.begin();		
-	std::cout << game.table.flop() << std::endl;
+	std::cout << game.table.flop() << std::endl << game.table.get_table_info() << std::endl;
 
 	// before turn action
+	std::cout << "Table info: " << game.table.get_table_info() << std::endl;
+	std::cout << alive_player(noalive, game.player_num) << std::endl;
+
 	all_in_flag = action_process(small_blind, noalive, ply_num, game.table, game.players, round_bet, -1);
-	if (all_in_flag) goto Final;
+	if (all_in_flag < 0) goto Final;
+	else if (all_in_flag == game.player_num + 1) goto Judge;
 	if (noalive.size() == ply_num - 1) return *noalive.begin();		
-	std::cout << game.table.turn() << std::endl;
+	std::cout << game.table.turn() << std::endl << game.table.get_table_info() << std::endl;
 	
 	// before river action
+	std::cout << "Table info: " << game.table.get_table_info() << std::endl;
+	std::cout << alive_player(noalive, game.player_num) << std::endl;
+
 	all_in_flag = action_process(small_blind, noalive, ply_num, game.table, game.players, round_bet, -1);
-	if (all_in_flag) goto Final;
+	if (all_in_flag < 0) goto Final;
+	else if (all_in_flag == game.player_num + 1) goto Judge;
 	if (noalive.size() == ply_num - 1) return *noalive.begin();		
-	std::cout << game.table.river() << std::endl;
+	std::cout << game.table.river() << std::endl << game.table.get_table_info() << std::endl;
 
 	// after river action
 Final:
+	std::cout << "Table info: " << game.table.get_table_info() << std::endl;
+	std::cout << alive_player(noalive, game.player_num) << std::endl;
+
+	if (game.table.get_game_phase() != 3) std::cout << game.table.river() << std::endl << game.table.get_table_info() << std::endl;
 	all_in_flag = action_process((all_in_flag == 0 ? small_blind : all_in_flag + ply_num), noalive, ply_num, game.table, game.players, round_bet, -1);
 	
 	// judge
+Judge:
+	std::cout << "Table info: " << game.table.get_table_info() << std::endl;
+	std::cout << alive_player(noalive, game.player_num) << std::endl;
 	std::vector<Result> candidate;
 	std::vector<Card> community = game.table.get_community_cards();
 	for (int p = 0; p < ply_num; p++) {
 		if (noalive.count(p)) continue;
+		std::cout << "Player " << std::to_string(p) << "'s hold: "  << game.players[p].get_hold_info() << std::endl;
 		Result r(p);
 		std::vector<Card> c = game.players[p].get_hold();
 		c.insert(c.begin(), community.begin(), community.end());
@@ -95,47 +112,71 @@ int action_process(int speak_order, std::set<int>& noalive, int ply_num, Table& 
 	std::set<int> raise;
 	for (int p = (speak_order) % ply_num; p != pre_raise && noalive.size() != ply_num - 1; p = (p+1)%ply_num) {
 		if (noalive.count(p)) continue;
+		if (noalive.size() == ply_num - 1) break;
 		std::cout << "player " + std::to_string(p) + " action" << std::endl;
 		char act;
 		if (p != 0) {
 			act = robot_action(table, players[p]);
 		} else {
-			std::cout << "Please choose: fold(f), call(c)";
+			std::cout << "# Table Info: " << table.get_table_info() << std::endl;
+			std::cout << "# Your chip num: " << players[p].get_chip_num() << std::endl << "# " << alive_player(noalive, ply_num) << std::endl;
+			std::cout << "# Your hold are: " << players[p].get_hold_info() << std::endl;
+			std::cout << "# Please choose: fold(f), call(c)";
 			if (!raise.count(p)) {
 				std::cout << " raise(r), all in(a)";
 			} if (round_bet[p] >= table.get_cur_chip()) {
-				std::cout << " check in(k)" << std::endl;
+				std::cout << ", check in(k)";
 			}
+			std::cout << std::endl;
+			std::cin >> act;
 		}
 		int diff = table.get_cur_chip() - round_bet[p];
-		std::cin >> act;
 		if (act == 'f') {
 			noalive.insert(p);
+			std::cout << "Player " + std::to_string(p) + " flop" << std::endl;
 		} else if (act == 'c') {
 			table.raise_cur_chip_sum(diff);
 			players[p].call(diff);
 			round_bet[p] += diff;
-		} else if (act == 'r' || 'a') {
+			std::cout << "Player " + std::to_string(p) + " call" << std::endl;
+		} else if (act == 'r' || act == 'a') {
 			int amt;
 			if (act == 'r') {
 				if (p == 0) {
-					std::cout << "How much chip do you want to raise?" << std::endl;
+					std::cout << "# How much chip do you want to raise?" << std::endl;
 					std::cin >> amt;
 				} else {
 					amt = table.get_cur_chip();
 				}
+				std::cout << "Player " + std::to_string(p) + " raise" << std::endl;
+
 			} else {
 				amt = players[p].get_chip_num();
+				std::cout << "Player " + std::to_string(p) + " all in" << std::endl;
+
 			}
 			players[p].raise(amt);
 			round_bet[p] += amt;
 			table.raise_cur_chip_sum(amt);
 			table.raise_cur_chip_to(round_bet[p]);
 			raise.insert(p);
+			pre_raise = p;
 			if (act == 'a') return p - ply_num;
+		} else {
+			std::cout << "Player " + std::to_string(p) + " check" << std::endl;
 		}
 		if (pre_raise == -1) pre_raise = speak_order;
 	}
+	if (noalive.size() == ply_num - 1) return ply_num + 1;
 	return 0;
 }
+
+std::string alive_player(const std::set<int>& noalive, const int& ply_num){
+	std::string info = "Alive player num: " + std::to_string(ply_num-noalive.size()) + ", they are: \n";
+	for (int p = 0; p < ply_num; p++) {
+		if (!noalive.count(p)) info += " Player " + std::to_string(p);
+	}
+	return info;
+}	
+
 

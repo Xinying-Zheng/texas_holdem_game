@@ -3,4 +3,4 @@
 
 int round_process(Game &game);
 int action_process(int speak_order, std::set<int>& noalive, int ply_num, Table& table, std::vector<Player>& players, std::vector<int>& round_bet, int pre_raise);
-	
+std::string alive_player(const std::set<int>& noalive, const int& ply_num);	

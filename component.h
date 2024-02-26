@@ -76,6 +76,7 @@ public:
 	bool is_alive();
 	void set_hold(Card card);
 	std::vector<Card> get_hold();
+	std::string get_hold_info();
 	int get_chip_num();	
 	void bet(int amount);
 	void call(int amount);

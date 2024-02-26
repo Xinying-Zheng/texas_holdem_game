@@ -14,6 +14,14 @@ std::vector<Card> Player::get_hold() {
 	return hold;
 }
 
+std::string Player::get_hold_info() {
+	std::string info;
+	for(Card c : hold) {
+		info += c.card_info() + " ";
+	}
+	return info;
+}
+
 int Player::get_chip_num() {
 	return chip.get_chip_num();
 }
