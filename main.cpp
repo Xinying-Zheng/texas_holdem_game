@@ -11,8 +11,9 @@ int main(int argc, char** argv) {
 	int ply_num, chip_num, blind_bet;
 	std::cin >> ply_num >> chip_num >> blind_bet;
 	std::cout << "Game start, you are Player 0" << std::endl;
+	Game game(ply_num, chip_num, blind_bet);
+
 	for (; ;) {
-		Game game(ply_num, chip_num, blind_bet);
 		game.poker.shuffle();
 		round_process(game);
 		// clean player's hold, table

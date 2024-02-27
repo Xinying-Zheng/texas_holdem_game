@@ -103,6 +103,7 @@ Judge:
 	for (auto p : winners) {
 		std::cout<< " Player " + std::to_string(p);
 		game.players[p].win(game.table.get_cur_chip_sum() / winner_num);
+		std::cout << "winner gain " << std::to_string(game.table.get_cur_chip_sum() / winner_num) << " and winner cur chip" << std::to_string(game.players[p].get_chip_num());
 	}
 	std::cout << std::endl;
 	return -1;	
